@@ -4,5 +4,5 @@ Various Python scripts to run on a Raspberry Pi Zero with a [Papirus Zero LCD di
 <img src="images/papirus-zero-display-sm.jpg" alt="Image of Papirus Zero Display showing current weather conditions.">
 
 Scripts:
- - [display_weather.py] - displays current weather conditions and next bus time on Papirus ePaper LCD display.
+ - [display_weather.py](display_weather.py) - displays current weather conditions and next bus time on Papirus ePaper LCD display.
 
