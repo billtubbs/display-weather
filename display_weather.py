@@ -11,21 +11,28 @@ import bitmaps
 from PIL import Image
 import numpy as np
 import time
+import logging
 import re
 
+logging.basicConfig(
+	filename='logfile.txt',
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
-print("\n--------------- display_weather.py ---------------\n")
+logging.info("\n--------------- display_weather.py ---------------\n")
 
-print("Displays current weather and next bus time to LCD screen.")
-print("display.\n")
+logging.info("Displays current weather and next bus time to LCD screen.")
+logging.info("display.\n")
 
 # Connect to Papirus LCD display
 display = Papirus()
 
-print("DateTime: {}".format(time.strftime("%Y-%m-%d %H:%M")))
-print("Display size: {}".format(display.size))
-print("PIL.Image version: {}".format(Image.VERSION))
-print("numpy version: {}".format(np.__version__))
+logging.info("DateTime: %s", time.strftime("%Y-%m-%d %H:%M"))
+logging.info("Display size: %s", display.size)
+logging.info("PIL.Image version: %s", Image.VERSION)
+logging.info("numpy version: %s", np.__version__)
 
 bitmaps.display_size = display.size
 
@@ -51,7 +58,7 @@ while True:
         description = weather['weather'][0]['description']
         messages.append(u"{0:.0f}{1} {2}".format(temp, tunits, description))
     else:
-        print("Error reading weather data from.")
+        logging.debug("Error reading weather data from.")
         messages.append(u"WEATHER ERROR")
 
     # Get next bus departure times
@@ -63,10 +70,11 @@ while True:
         if match:
             next_bus_time = match.group()
         else:
-            print("Error understanding bus time string '{s}'".format(next_buses))
+            logging.debug("Error understanding bus time string '%s'",
+                          next_buses)
             next_bus_time = "Error"
     else:
-        print("Error reading bus times:", error_message)
+        logging.debug("Error reading bus times: %s", error_message)
         next_bus_time = "Error"
 
     messages.append("Next bus: {}".format(next_bus_time))
