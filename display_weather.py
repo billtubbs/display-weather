@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """Python script to display current weather conditions and next
 bus time on Papirus ePaper LCD display
 """
@@ -20,10 +19,9 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-logging.info("\n--------------- display_weather.py ---------------\n")
-
-logging.info("Displays current weather and next bus time to LCD screen.")
-logging.info("display.\n")
+logging.info("-------------- display_weather.py --------------")
+logging.info("Displays current weather and next bus time to Papirus")
+logging.info("LCD display.")
 
 # Connect to Papirus LCD display
 display = Papirus()
@@ -39,9 +37,6 @@ bitmaps.display_size = display.size
 city_id = 6173331
 tunits = u'\xb0C' # deg Celcius symbol
 delay = 5*60
-
-# Regular expression to extract time from a string
-pattern = '\d{1,2}:\d{2}(am|pm)'
 
 previous_text = None
 

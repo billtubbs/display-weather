@@ -18,8 +18,6 @@ from Translink from the website link below.
 
 Translink API Reference:
 https://developer.translink.ca/ServicesRtti/ApiReference
-
-TODO: Should convert the time/date string into a datetime
 """
 
 import requests
