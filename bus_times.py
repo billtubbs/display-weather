@@ -24,15 +24,43 @@ import requests
 import sys
 import time
 import datetime
+import argparse
 from xml.etree import ElementTree
 from config import load_from_config
+import logging
 
-api_key = load_from_config('translink_api_key')
-stops_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}"
-stop_estimates_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}/estimates"
+logging.basicConfig(
+	filename='logfile.txt',
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 # Default stop number
 default_stop_number = 51034 # Arbutus St at W 15 Ave
+
+parser = argparse.ArgumentParser(description="Get bus departure times "
+                                 "from Translink's Real-Time Transit "
+                                 "Information API..")
+
+# Load default API key from local file
+api_key = load_from_config('translink_api_key')
+
+# Optional command-line arguments
+parser.add_argument('--stop', help='Bus stop number (integer)',
+                    type=int, default=default_stop_number)
+parser.add_argument('--timeframe', help='Time horizon in seconds.',
+                    type=int, default=12*60)
+parser.add_argument('--n', help='Number of bus times to return.',
+                    type=int, default=2)
+parser.add_argument('--key', help='Your API key for Translink '
+                    'Real-Time Transit Information API',
+                    type=str, default=api_key)
+args = parser.parse_args()
+
+api_key = args.key
+stops_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}"
+stop_estimates_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}/estimates"
 
 
 def get_next_buses(stop_number=default_stop_number, time_frame=12*60,
@@ -64,6 +92,8 @@ def get_next_buses(stop_number=default_stop_number, time_frame=12*60,
             contain departure times as strings according to
             time_format (e.g. '17:15').
     """
+
+    logging.info("Getting %d bus times for stop %s..." % (n, stop_number))
 
     params = {
         'apiKey': api_key,
@@ -217,4 +247,9 @@ def get_next_bus_time(stop_number, bus_number=None, min_time=60*4,
 
 
 if __name__ == "__main__":
-    print(get_next_buses(*sys.argv[1:]))
+
+    print(get_next_buses(
+        stop_number=args.stop,
+        time_frame=args.timeframe,
+        n=args.n
+    ))
