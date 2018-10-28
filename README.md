@@ -1,8 +1,6 @@
 # display-weather
 Various Python scripts to run on a Raspberry Pi Zero with a [Papirus Zero LCD display](https://www.adafruit.com/product/3335).
 
-##display_weather.py
-
 Large font size:
 
 <img src="images/papirus-zero-display-sm.jpg" alt="Image of Papirus Zero Display showing current weather conditions and next bus times.">
