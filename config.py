@@ -8,6 +8,15 @@ Typical usage:
 """
 
 import yaml
+import logging
+
+logging.basicConfig(
+	filename='logfile.txt',
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
 
 def load_from_config(key):
 
@@ -15,6 +24,6 @@ def load_from_config(key):
         try:
             params = yaml.load(f)
         except yaml.YAMLError as exc:
-            print(exc)
+            logging.debug(exc)
 
     return params[key]
