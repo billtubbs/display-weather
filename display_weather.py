@@ -12,7 +12,6 @@ from PIL import Image
 import numpy as np
 import time
 import logging
-import re
 
 logging.basicConfig(
 	filename='logfile.txt',
@@ -64,15 +63,23 @@ while True:
     # Get next bus departure times
     error_message, next_buses = \
                       bus_times.get_next_buses(stop_number=51034)
+    bus_number = list(next_buses.keys())[0]
 
     if not error_message:
-        match = re.search(pattern, list(next_buses.values())[0][0])
-        if match:
-            next_bus_time = match.group()
-        else:
-            logging.debug("Error understanding bus time string '%s'",
-                          next_buses)
+        try:
+            next_bus_times = [time.strptime(t, "%Y-%m-%d %H:%M:%S")
+                              for t in next_buses[bus_number]]
+        except:
+            logging.debug("Error finding times for bus %s (%s).",
+                          '016', next_buses.__repr__())
             next_bus_time = "Error"
+
+        # Either show the next bus or the second-next one
+        i = 0 if time.mktime(next_bus_times[0]) - time.time() > 60*4 else 1
+
+        # Convert time into simple 'HH:MM' string
+        next_bus_time = time.strftime("%H:%M", next_bus_times[i])
+
     else:
         logging.debug("Error reading bus times: %s", error_message)
         next_bus_time = "Error"

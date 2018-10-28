@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-
-"""
-Python module to fetch departure times from Translink's Real-Time
+"""Python module to fetch departure times from Translink's Real-Time
 Transit Information API.
 
 Includes:
@@ -20,13 +18,17 @@ from Translink from the website link below.
 
 Translink API Reference:
 https://developer.translink.ca/ServicesRtti/ApiReference
+
+TODO: Should convert the time/date string into a datetime
 """
 
 import requests
 import sys
+import time
 from xml.etree import ElementTree
+from config import load_from_config
 
-api_key = "mOrnY5iIMYmeMLkYBVUO"
+api_key = load_from_config('translink_api_key')
 stops_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}"
 stop_estimates_url = "http://api.translink.ca/RTTIAPI/V1/stops/{}/estimates"
 
@@ -97,8 +99,14 @@ def get_next_buses(stop_number=default_stop_number, time_frame=12*60):
         schedule = bus.find('Schedules')
         schedules = schedule.findall('Schedule')
         times = []
+
+        # Date/times expected in following format
+        # '5:15pm 2018-10-27'
         for s in schedules:
-            times.append(s.find('ExpectedLeaveTime').text)
+            time_str = s.find('ExpectedLeaveTime').text
+            t = time.strptime(time_str, "%I:%M%p %Y-%m-%d")
+            # Convert datetime to simple time string
+            times.append(time.strftime("%Y-%m-%d %H:%M:%S", t))
         leave_times[route] = times
 
     return None, leave_times
