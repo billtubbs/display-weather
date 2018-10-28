@@ -25,5 +25,7 @@ def load_from_config(key):
             params = yaml.load(f)
         except yaml.YAMLError as exc:
             logging.debug(exc)
+        else:
+            logging.info("Item retrieved from config file.")
 
     return params[key]
