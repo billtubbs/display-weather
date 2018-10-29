@@ -154,7 +154,11 @@ def get_next_buses(stop_number=default_stop_number, time_frame=12*60,
                 time_str = '00' + time_str[2:]
 
             # Convert to datetime
-            t = time.strptime(time_str, "%I:%M%p")
+            try:
+                t = time.strptime(time_str, "%I:%M%p %Y-%m-%d")
+            except ValueError:
+                t = time.strptime(time_str, "%I:%M%p")
+
             # Convert datetime to simple time string
             times.append(time.strftime(time_format, t))
         leave_times[route] = times
